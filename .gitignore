@@ -1,2 +1,8 @@
 /target
 **/*.rs.bk
+
+.idea/
+
+src/stm32f4_hal/build/
+
+src/stm32f4_hal/cmake-build-debug/

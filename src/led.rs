@@ -2,7 +2,7 @@ use crate::gpio;
 
 #[allow(dead_code)]
 pub struct Led<'a> {
-    gpio: &'a mut gpio::GpioTypeDef,
+    gpio: &'a mut gpio::GPIO_TypeDef,
     pin: u16,
     is_on: bool,
 }
@@ -16,14 +16,14 @@ impl Led<'_> {
     #[allow(dead_code)]
     pub fn on(&mut self) {
         unsafe {
-            gpio::HAL_GPIO_WritePin(self.gpio, self.pin, gpio::GPIOPinState::GPIO_PIN_SET)
+            gpio::HAL_GPIO_WritePin(self.gpio, self.pin, gpio::GPIO_PinState::GPIO_PIN_SET)
         }
     }
 
     #[allow(dead_code)]
     pub fn off(&mut self) {
         unsafe {
-            gpio::HAL_GPIO_WritePin(self.gpio, self.pin, gpio::GPIOPinState::GPIO_PIN_RESET)
+            gpio::HAL_GPIO_WritePin(self.gpio, self.pin, gpio::GPIO_PinState::GPIO_PIN_RESET)
         }
     }
 

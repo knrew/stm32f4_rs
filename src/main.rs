@@ -8,14 +8,15 @@ mod gpio;
 mod led;
 mod button;
 mod uart;
+mod nucleo_f411re;
 
 use hal_time as time;
 
 
 #[no_mangle]
 pub extern fn main_rs() {
-    let mut led = led::Led::new(gpio::GpioLed2());
-    let button = button::Button::new(gpio::GpioButton1());
+    let mut led = led::Led::new(nucleo_f411re::GpioLed2());
+    let button = button::Button::new(nucleo_f411re::GpioButton1());
 
     let mut start = time::get_tick();
     loop {

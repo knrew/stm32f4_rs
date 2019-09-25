@@ -2,7 +2,7 @@ use crate::gpio;
 
 #[allow(dead_code)]
 pub struct Button<'a> {
-    gpio: &'a mut gpio::GpioTypeDef,
+    gpio: &'a mut gpio::GPIO_TypeDef,
     pin: u16,
 }
 
@@ -17,6 +17,6 @@ impl Button<'_> {
         let state = unsafe {
             gpio::HAL_GPIO_ReadPin(self.gpio, self.pin)
         };
-        state as u8 == gpio::GPIOPinState::GPIO_PIN_RESET as u8
+        state as u8 == gpio::GPIO_PinState::GPIO_PIN_RESET as u8
     }
 }

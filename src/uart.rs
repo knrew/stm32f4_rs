@@ -10,12 +10,14 @@ pub enum HAL_StatusTypeDef {
     HAL_TIMEOUT = 0x03isize,
 }
 
+#[allow(dead_code)]
 extern "C" {
-     fn uart_send(s: &str);
+    fn uart_send(s: *const u8, length: usize)->u8;
 }
 
+#[allow(dead_code)]
 pub fn print(s: &str) {
     unsafe {
-        uart_send(s);
+        uart_send(s.as_ptr(), s.len());
     }
 }

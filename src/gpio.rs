@@ -1,17 +1,8 @@
 #![allow(non_snake_case)]
 #![allow(non_camel_case_types)]
 
-const GPIO_PIN_5: u16 = 0x0020u16;
-const GPIO_PIN_13: u16 = 0x2000u16;
-
-const PERIPH_BASE: u32 = 0x40000000u32;
-const AHB1PERIPH_BASE: u32 = (PERIPH_BASE + 0x00020000u32);
-
-const GPIOA_BASE: u32 = (AHB1PERIPH_BASE + 0x0000u32);
-const GPIOC_BASE: u32 = (AHB1PERIPH_BASE + 0x0800u32);
-
 #[repr(C)]
-pub struct GpioTypeDef {
+pub struct GPIO_TypeDef {
     MODER: u32,
     OTYPER: u32,
     OSPEEDR: u32,
@@ -23,43 +14,41 @@ pub struct GpioTypeDef {
     AFR: [u32; 2],
 }
 
+#[allow(dead_code)]
 #[repr(C)]
-pub enum GPIOPinState {
+pub enum GPIO_PinState {
     GPIO_PIN_RESET = 0,
     GPIO_PIN_SET = 1,
 }
 
 #[allow(dead_code)]
 extern "C" {
-    pub fn HAL_GPIO_ReadPin(GPIOx: &GpioTypeDef, GPIO_Pin: u16) -> GPIOPinState;
-    pub fn HAL_GPIO_WritePin(GPIOx: &mut GpioTypeDef, GPIO_Pin: u16, PinState: GPIOPinState);
-    pub fn HAL_GPIO_TogglePin(GPIOx: &mut GpioTypeDef, GPIO_Pin: u16);
+    pub fn HAL_GPIO_ReadPin(GPIOx: &GPIO_TypeDef, GPIO_Pin: u16) -> GPIO_PinState;
+    pub fn HAL_GPIO_WritePin(GPIOx: &mut GPIO_TypeDef, GPIO_Pin: u16, PinState: GPIO_PinState);
+    pub fn HAL_GPIO_TogglePin(GPIOx: &mut GPIO_TypeDef, GPIO_Pin: u16);
 }
-
-#[allow(dead_code)]
-pub fn GPIOA() -> &'static mut GpioTypeDef {
-    unsafe { &mut *(GPIOA_BASE as *mut GpioTypeDef) }
-}
-
-#[allow(dead_code)]
-pub fn GPIOC() -> &'static mut GpioTypeDef {
-    unsafe { &mut *(GPIOC_BASE as *mut GpioTypeDef) }
-}
-
 
 #[allow(dead_code)]
 pub struct Gpio<'a> {
-    pub gpio: &'a mut GpioTypeDef,
+    pub gpio: &'a mut GPIO_TypeDef,
     pub pin: u16,
 }
 
-pub const LD2_PIN: u16 = GPIO_PIN_5;
-pub const B1_PIN: u16 = GPIO_PIN_13;
+pub const GPIO_PIN_5: u16 = 0x0020u16;
+pub const GPIO_PIN_13: u16 = 0x2000u16;
 
-pub fn GpioLed2() -> Gpio<'static> {
-    Gpio { gpio: GPIOA(), pin: LD2_PIN }
+pub const PERIPH_BASE: u32 = 0x40000000u32;
+pub const AHB1PERIPH_BASE: u32 = (PERIPH_BASE + 0x00020000u32);
+
+pub const GPIOA_BASE: u32 = (AHB1PERIPH_BASE + 0x0000u32);
+pub const GPIOC_BASE: u32 = (AHB1PERIPH_BASE + 0x0800u32);
+
+#[allow(dead_code)]
+pub fn GPIOA() -> &'static mut GPIO_TypeDef {
+    unsafe { &mut *(GPIOA_BASE as *mut GPIO_TypeDef) }
 }
 
-pub fn GpioButton1() -> Gpio<'static> {
-    Gpio { gpio: GPIOC(), pin: B1_PIN }
+#[allow(dead_code)]
+pub fn GPIOC() -> &'static mut GPIO_TypeDef {
+    unsafe { &mut *(GPIOC_BASE as *mut GPIO_TypeDef) }
 }

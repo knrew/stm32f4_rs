@@ -23,7 +23,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,6 +46,10 @@
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+void uart_send(uint8_t *str) {
+    setbuf(stdout, NULL);
+    HAL_UART_Transmit(&huart2, str, strlen((char *) str), 0xffff);
+}
 
 /* USER CODE END PV */
 
@@ -99,16 +104,10 @@ int main(void) {
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1) {
-//        if (HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin) == GPIO_PIN_RESET) {
-//            HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-//        } else {
-            HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-//        }
-
-        HAL_Delay(50);
-
         /* USER CODE END WHILE */
 
+        uart_send("poyopoyo\r\n");
+        HAL_Delay(100);
         /* USER CODE BEGIN 3 */
     }
     /* USER CODE END 3 */

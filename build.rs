@@ -1,5 +1,3 @@
-//extern crate cc;
-
 fn fetch_file_names(folder_path: &str) -> Result<Vec<String>, String> {
     let mut names: Vec<String> = Vec::new();
 
@@ -70,28 +68,4 @@ fn main() {
 
     println!("cargo:rerun-if-changed=build.rs");
     println!("cargo:rerun-if-changed=src/stm32f4_hal/Src/main.c");
-
-//    println!("cargo:rerun-if-changed=src/stm32f4_hal/STM32F411RETx_FLASH.ld");
-//    println!("cargo:rerun-if-changed=src/stm32f4_hal/startup/startup_stm32f411xe.s");
-
 }
-
-//let inc_dirs = [
-//        &format!("-I{}/Drivers/CMSIS/Device/ST/STM32F4xx/Include", hal_dir),
-//        &format!("-I{}/Drivers/CMSIS/Include", hal_dir),
-//        &format!("-I{}/Drivers/STM32F4xx_HAL_Driver/Inc", hal_dir),
-//        &format!("-I{}/Inc", hal_dir),
-//    ];
-
-//    let src = fetch_file_names(&format!("{}/Src/", hal_dir)).expect("");
-//    let drivers = fetch_file_names(&format!("{}/Drivers/", hal_dir)).expect("");
-//    let startup = fetch_file_names(&format!("{}/startup/", hal_dir)).expect("");
-
-//    let definitions = [
-//        "-D__weak=__attribute__((weak))",
-//        "-D__packed=__attribute__((__packed__))",
-//        "-DUSE_HAL_DRIVER",
-//        "-DSTM32F411xE"
-//    ];
-
-//    let compile_flags = "-mcpu=cortex-m4 ${FPU_FLAGS} -mthumb -mthumb-interwork -ffunction-sections -fdata-sections -g -fno-common -fmessage-length=0 -specs=nosys.specs -specs=nano.specs";

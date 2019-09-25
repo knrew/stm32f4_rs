@@ -2,11 +2,13 @@
 #![allow(non_camel_case_types)]
 
 const GPIO_PIN_5: u16 = 0x0020u16;
-pub const LD2_PIN: u16 = GPIO_PIN_5;
+const GPIO_PIN_13: u16 = 0x2000u16;
 
 const PERIPH_BASE: u32 = 0x40000000u32;
 const AHB1PERIPH_BASE: u32 = (PERIPH_BASE + 0x00020000u32);
+
 const GPIOA_BASE: u32 = (AHB1PERIPH_BASE + 0x0000u32);
+const GPIOC_BASE: u32 = (AHB1PERIPH_BASE + 0x0800u32);
 
 #[repr(C)]
 pub struct GpioTypeDef {
@@ -22,14 +24,14 @@ pub struct GpioTypeDef {
 }
 
 #[repr(C)]
-enum GPIOPinState {
+pub enum GPIOPinState {
     GPIO_PIN_RESET = 0,
     GPIO_PIN_SET = 1,
 }
 
 #[allow(dead_code)]
 extern "C" {
-    pub fn HAL_GPIO_ReadPin(GPIOx: &mut GpioTypeDef, GPIO_Pin: u16) -> GPIOPinState;
+    pub fn HAL_GPIO_ReadPin(GPIOx: &GpioTypeDef, GPIO_Pin: u16) -> GPIOPinState;
     pub fn HAL_GPIO_WritePin(GPIOx: &mut GpioTypeDef, GPIO_Pin: u16, PinState: GPIOPinState);
     pub fn HAL_GPIO_TogglePin(GPIOx: &mut GpioTypeDef, GPIO_Pin: u16);
 }
@@ -40,43 +42,24 @@ pub fn GPIOA() -> &'static mut GpioTypeDef {
 }
 
 #[allow(dead_code)]
-pub struct Led<'a> {
-    gpio: &'a mut GpioTypeDef,
-    pin: u16,
+pub fn GPIOC() -> &'static mut GpioTypeDef {
+    unsafe { &mut *(GPIOC_BASE as *mut GpioTypeDef) }
 }
 
-impl Led<'_> {
-    #[allow(dead_code)]
-    pub fn new(gpio: &mut GpioTypeDef, pin: u16) -> Led<'_> {
-        Led { gpio: gpio, pin: pin }
-    }
 
-    #[allow(dead_code)]
-    pub fn on(&mut self) {
-        unsafe {
-            HAL_GPIO_WritePin(self.gpio, self.pin, GPIOPinState::GPIO_PIN_SET)
-        }
-    }
+#[allow(dead_code)]
+pub struct Gpio<'a> {
+    pub gpio: &'a mut GpioTypeDef,
+    pub pin: u16,
+}
 
-    #[allow(dead_code)]
-    pub fn off(&mut self) {
-        unsafe {
-            HAL_GPIO_WritePin(self.gpio, self.pin, GPIOPinState::GPIO_PIN_RESET)
-        }
-    }
+pub const LD2_PIN: u16 = GPIO_PIN_5;
+pub const B1_PIN: u16 = GPIO_PIN_13;
 
-    #[allow(dead_code)]
-    pub fn toggle(&mut self) {
-        unsafe {
-            HAL_GPIO_TogglePin(self.gpio, self.pin);
-        }
-    }
+pub fn GpioLed2() -> Gpio<'static> {
+    Gpio { gpio: GPIOA(), pin: LD2_PIN }
+}
 
-    #[allow(dead_code)]
-    pub fn is_on(&mut self) -> bool {
-        let state = unsafe {
-            HAL_GPIO_ReadPin(self.gpio, self.pin)
-        };
-        state as u8 == GPIOPinState::GPIO_PIN_RESET as u8
-    }
+pub fn GpioButton1() -> Gpio<'static> {
+    Gpio { gpio: GPIOC(), pin: B1_PIN }
 }

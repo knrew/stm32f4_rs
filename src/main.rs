@@ -3,21 +3,34 @@
 #![feature(lang_items)]
 #![feature(start)]
 
-
-mod gpio;
 mod hal_time;
+mod gpio;
+mod led;
+mod button;
+mod uart;
 
 use hal_time as time;
 
+
 #[no_mangle]
 pub extern fn main_rs() {
-    let mut led = gpio::Led::new(gpio::GPIOA(), gpio::LD2_PIN);
+    let mut led = led::Led::new(gpio::GpioLed2());
+    let button = button::Button::new(gpio::GpioButton1());
 
+    let mut start = time::get_tick();
     loop {
-        led.on();
-        time::delay(100);
-        led.off();
-        time::delay(100);
+        if button.is_pushed() {
+            uart::print("yes.\r\n");
+        } else {
+            uart::print("no.\r\n");
+        }
+
+        if time::get_tick() - start > 500 {
+            led.toggle();
+            start = time::get_tick();
+        }
+
+        time::delay(500);
     }
 }
 
